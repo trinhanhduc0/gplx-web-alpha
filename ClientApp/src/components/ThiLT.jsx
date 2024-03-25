@@ -16,7 +16,11 @@ const SwitchComponent = memo(({ handleCheckboxChange, autoSwitchEnabled }) => {
 export const ThiLT = () => {
     //Hạng thị GPLX
     const [classGPLX, setClassGPLX] = useState(() => {
-        return parseInt(localStorage.getItem("HANG"));
+        var hangJson = localStorage.getItem('HANG');
+
+        var hang = JSON.parse(hangJson);
+
+        return hang.idHang;
     });
 
     //Câu hỏi dành cho hạng thị(int)
@@ -38,13 +42,18 @@ export const ThiLT = () => {
 
     const [lsChoose, setLsChoose] = useState([]);
 
-    const [timeLeft, setTimeLeft] = useState(300); // Thời gian còn lại trong bài thi (tính theo giây)
+    const [timeLeft, setTimeLeft] = useState(() => {
+        var hangJson = localStorage.getItem('HANG');
+
+        var hang = JSON.parse(hangJson);
+
+        return hang.thoigianthi*60;
+    }); // Thời gian còn lại trong bài thi (tính theo giây)
     const [timerActive, setTimerActive] = useState(false); // Trạng thái của đồng hồ đếm ngược
 
     // Hàm bắt đầu đếm ngược
     const startTimer = () => {
         setTimerActive(true);
-        setTimeLeft(300); // Đếm ngược 3600 giây (1 giờ)
     };
 
     // Hàm dừng đếm ngược
@@ -286,6 +295,7 @@ export const ThiLT = () => {
             alert("Bạn làm đúng: " + count + " câu");
         }
     };
+
     return (
         <>
             <div id="questionOverlay" className="overlay hidden">

@@ -45,13 +45,6 @@ export class NavMenu extends Component {
             showModal: true
         });
     }
-
-    closeModal = () => {
-        this.setState({
-            showModal: false
-        });
-    }
-
     // Hàm xử lý khi người dùng nhấn OK trong modal
     submitForm = () => {
         const { selectedLicenseType } = this.state;
@@ -123,7 +116,6 @@ export class NavMenu extends Component {
                                 </div>
                                 {/* Footer */}
                                 <div className="bg-gray-200 rounded-b-lg p-4 flex justify-around">
-                                    <button type="button" onClick={this.closeModal}><span>Cancel</span></button>
                                     <button type="button"  onClick={this.submitForm}><span>OK</span></button>
                                 </div>
                             </div>

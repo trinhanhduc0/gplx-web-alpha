@@ -28,7 +28,6 @@ export class NavMenu extends Component {
                 console.error('Error fetching data:', error);
             });
         const selectedLicenseType = JSON.parse(localStorage.getItem("HANG"));
-        console.log(selectedLicenseType);
         if (selectedLicenseType) {
             this.setState({ selectedLicenseType: selectedLicenseType });
         }
@@ -50,7 +49,6 @@ export class NavMenu extends Component {
         const { selectedLicenseType } = this.state;
         if (selectedLicenseType) {
             // Lưu hạng GPLX vào localStorage
-            console.log(JSON.stringify(selectedLicenseType))
             localStorage.setItem('HANG', JSON.stringify(selectedLicenseType));
             // Đóng modal sau khi đã chọn hạng
             this.setState({ showModal: false });
@@ -79,10 +77,10 @@ export class NavMenu extends Component {
                                 <NavLink tag={Link} className="text-dark" to="/">Home</NavLink>
                             </NavItem>
                             <NavItem>
-                                <NavLink tag={Link} className="text-dark" to="/thilt">Thi thử</NavLink>
+                                <NavLink tag={Link} className="text-dark" to="/thi-ly-thuyet">Thi thử</NavLink>
                             </NavItem>
                             <NavItem>
-                                <NavLink tag={Link} className="text-dark" to="/ontaplt">Học lý thuyết</NavLink>
+                                <NavLink tag={Link} className="text-dark" to="/hoc-ly-thuyet">Học lý thuyết</NavLink>
                             </NavItem>
                             <NavItem>
                                 <button className="btn btn-primary" onClick={() => this.openModal()}>{this.state.selectedLicenseType.thongtin != undefined ? "HẠNG: " + this.state.selectedLicenseType.thongtin : "VUI LÒNG CHỌN HẠNG"} </button>
@@ -106,8 +104,7 @@ export class NavMenu extends Component {
                                         <button
                                             key={licenseType.idHang}
                                             type="button"
-
-                                            className={`w-24 h-12 m-1 ${parseInt(licenseType.idHang) === parseInt(this.state.selectedLicenseType) ? 'bg-gray-500' : 'bg-gray-100'} hover:bg-gray-500 hover:text-white`}
+                                            className={`w-24 h-12 m-1 ${parseInt(licenseType.idHang) === parseInt(this.state.selectedLicenseType.idHang) ? 'bg-gray-500 text-white' : 'bg-gray-100'} hover:bg-gray-500 hover:text-white`}
                                             onClick={() => this.setState({ selectedLicenseType: licenseType })}
                                         >
                                             <span>{licenseType.thongtin}</span>

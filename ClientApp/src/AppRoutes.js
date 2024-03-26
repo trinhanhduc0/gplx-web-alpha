@@ -8,11 +8,11 @@ const AppRoutes = [
     element: <Home />
   },
   {
-    path: '/ontaplt',
+    path: '/hoc-ly-thuyet',
     element: <OnTapLT />
   },
   {
-    path: '/thilt',
+    path: '/thi-ly-thuyet',
     element: <ThiLT />
   }
 ];

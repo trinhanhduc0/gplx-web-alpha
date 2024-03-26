@@ -115,7 +115,7 @@ namespace DemoGPLX.Controllers
                 // Optionally, return the updated data as JSON
                 return Json(data);
             }
-            catch (Exception ex)
+            catch (Exception )
             {
                 // Handle exceptions appropriately
                 return BadRequest("An error occurred while updating user data.");

@@ -33,7 +33,7 @@ export class NavMenu extends Component {
         }
     }
 
-    toggleNavbar() {
+    toggleNavbar = () => {
         this.setState({
             collapsed: !this.state.collapsed
         });

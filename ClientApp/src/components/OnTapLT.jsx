@@ -88,17 +88,12 @@ export const OnTapLT = () => {
             switch (event.key) {
                 case 'ArrowRight':
                 case 'ArrowDown':
-
-                    if (currentQuestionIndex < lsQuestion.length - 1) {
-                        selectQuestion(currentQuestionIndex + 1);
-                    }
+                    selectQuestion((currentQuestionIndex + 1 + lsQuestion.length) % lsQuestion.length);
+                    console.log(lsQuestion.length);
                     break;
                 case 'ArrowLeft':
                 case 'ArrowUp':
-
-                    if (currentQuestionIndex > 0) {
-                        selectQuestion(currentQuestionIndex - 1);
-                    }
+                    selectQuestion((currentQuestionIndex - 1 + lsQuestion.length) % lsQuestion.length);
                     break;
                 case '1':
                 case '2':

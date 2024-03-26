@@ -227,6 +227,7 @@ namespace DemoGPLX.Controllers
                 }
             }
             catch { return RedirectToAction("Login"); }
+
             ViewBag.Hang = QuestionUtil.GetAllHang();
             ViewBag.Chuong = QuestionUtil.GetAllChuong();
             ViewBag.HangChuong = QuestionUtil.GetContext().HangChuongs.ToList();
@@ -249,16 +250,17 @@ namespace DemoGPLX.Controllers
                 }
             }
             catch { return RedirectToAction("Login"); }
-            ViewBag.Chuong = QuestionUtil.GetAllChuong();
-            string[] ds_SoLuongChuong = Request.Form["Soluong[]"];
-            if(ds_SoLuongChuong.Any(e => e.Trim() == ""))
-            {
-                ModelState.AddModelError("", "Không để trống các mục số lượng câu");
-                return View(hc);
-            }
+            
             if (ModelState.IsValid)
             {
-                if(QuestionUtil.GetContext().Hangs.Find(hc.IdHangNavigation.IdHang)==null)
+                ViewBag.Chuong = QuestionUtil.GetAllChuong();
+                string[] ds_SoLuongChuong = Request.Form["Soluong[]"];
+                if (ds_SoLuongChuong.Any(e => e.Trim() == ""))
+                {
+                    ModelState.AddModelError("", "Không để trống các mục số lượng câu");
+                    return View(hc);
+                }
+                if (QuestionUtil.GetContext().Hangs.Find(hc.IdHangNavigation.IdHang)==null)
                 {
                     QuestionUtil.GetContext().Hangs.Add(hc.IdHangNavigation);
                     QuestionUtil.GetContext().SaveChanges();
@@ -334,7 +336,6 @@ namespace DemoGPLX.Controllers
                     oldHang.Diemtoitheu = hc.IdHangNavigation.Diemtoitheu;
                     oldHang.Thongtinchitiet = hc.IdHangNavigation.Thongtinchitiet;
 
-
                     var hangChuongDelete = QuestionUtil.GetContext().HangChuongs.Where(e => e.IdHang == hc.IdHangNavigation.IdHang).ToList();
                     QuestionUtil.GetContext().HangChuongs.RemoveRange(hangChuongDelete);
 
@@ -365,6 +366,7 @@ namespace DemoGPLX.Controllers
             if (!QuestionUtil.GetContext().Hangs.Any(e => e.HangCaus.Any(e=> e.IdHang==id)))
             {
                 QuestionUtil.GetContext().HangChuongs.RemoveRange(QuestionUtil.GetContext().HangChuongs.Where(e => e.IdHang == id));
+                QuestionUtil.GetContext().HangCaus.RemoveRange(QuestionUtil.GetContext().HangCaus.Where(e => e.IdHang == id));
                 QuestionUtil.GetContext().SaveChanges();
                 QuestionUtil.GetContext().Hangs.Remove(QuestionUtil.GetContext().Hangs.Find(id));
                 QuestionUtil.GetContext().SaveChanges();

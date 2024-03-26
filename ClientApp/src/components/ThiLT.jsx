@@ -296,6 +296,8 @@ export const ThiLT = () => {
         }
     };
 
+    console.log("render");
+
     return (
         <>
             <div id="questionOverlay" className="overlay hidden">
@@ -365,7 +367,7 @@ export const ThiLT = () => {
                             ques ? (
                                 <div className="container mt-4" id="test_content">
                                     <div className="container sm:w-75" id="content">
-                                        <div className={`question-container ${ques.Ttcaus.$values[0].Diemliet ? 'text-danger' : ''}`}>
+                                        <div className={`question-container`}>
                                             <u><b>Câu hỏi {currentQuestionIndex + 1}</b></u>: {ques.Ttcaus.$values[0].Cauhoi}
                                             <div className="flex justify-content-center">
                                                 <img

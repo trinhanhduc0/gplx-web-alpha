@@ -2,6 +2,7 @@
 import axios from 'axios';
 import $ from 'jquery';
 import { TbPlayerTrackNextFilled, TbPlayerTrackPrevFilled } from "react-icons/tb";
+import { List } from '../../../node_modules/antd/es/index';
 
 
 const SwitchComponent = memo(({ handleCheckboxChange, autoSwitchEnabled }) => {
@@ -23,8 +24,6 @@ export const OnTapLT = () => {
         return hang.idHang;
     });
 
-    const [typeGPLX, setTypeGPLX] = useState([]);
-
     //Câu hỏi dành cho hạng thị(int)
     const [lsQuestion, setLsQuestion] = useState([]);
 
@@ -40,6 +39,7 @@ export const OnTapLT = () => {
     //Thông tin câu hỏi (Object)
     const [ques, setQues] = useState();
 
+    const [listChuong, setListChuong] = useState();
 
     const [lsChoose, setLsChoose] = useState();
 
@@ -47,9 +47,24 @@ export const OnTapLT = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.post(`https://localhost:7086/lythuyet/laycauhoi?id=` + classGPLX);
-                const questions = response.data.$values;
+                //Get question
+
+                const ques_response = await axios.post(`https://localhost:7086/lythuyet/laycauhoi?id=${classGPLX}`);
+                
+                const questions = ques_response.data.$values;
                 setLsQuestion(questions);
+                fetch('https://localhost:7086/cauhoi/getchapterformobile')
+                    .then(response => response.json())
+                    .then(data => {
+                        setListChuong(data);
+                    })
+                    .catch(error => {
+                        console.error('Error fetching data:', error);
+                    });
+
+                //Get chapter
+
+                //Get list chooses
                 const storedLsChoose = localStorage.getItem("lsChoose");
 
                 if (storedLsChoose) {
@@ -122,7 +137,6 @@ export const OnTapLT = () => {
                 $(`#image${ques.IdCau}`).removeClass("hidden");
                 axios.post(`https://localhost:7086/lythuyet/LayHinHCauHoi?id=${ques.IdCau}`)
                     .then(res => {
-
                         setQues((prevQues) => ({
                             ...prevQues,
                             Ttcaus: {
@@ -162,7 +176,7 @@ export const OnTapLT = () => {
                 $(`#image${ques.IdCau}`).addClass("hidden");
             }
             else {
-                $(`#image${ques.IdCau}`).removeClass("hidden");
+                $(`#image${ques.IdCau}`).removeClass("hidden"); 
 
             }
         }
@@ -233,21 +247,6 @@ export const OnTapLT = () => {
         setCurrentQuestionIndex(index);
     }
 
-    // Other functions and event handlers
-    let selectedLicenseType = null;
-
-    function selectLicenseType(type) {
-        selectedLicenseType = type;
-    }
-
-    function submitForm() {
-        if (selectedLicenseType) {
-            alert('Bạn đã chọn hạng ' + selectedLicenseType);
-            // Thực hiện các hành động khác sau khi đã chọn hạng GPLX
-        } else {
-            alert('Vui lòng chọn một hạng GPLX');
-        }
-    }
     return (
         <>
             <div id="questionOverlay" className="overlay hidden">
@@ -255,17 +254,26 @@ export const OnTapLT = () => {
                     <img width="64" height="64" src="https://img.icons8.com/nolan/64/exit.png" alt="exit" />
                 </button>
                 <div id="selectedQuestions" className="selected-questions w-75 h-100">
-                    {lsQuestion && lsQuestion.map((value, index) => (
-   
-                        <button
-                            style={{ width: '60px' }}
-                            className={`btn btn-${lsChoose[index] != -1 ? 'success' : 'secondary'} m-1 text-left`}
-                            onClick={() => selectQuestion(index)} // Use onClick instead of onclick
-                            key={`select_ques_${index}`} // Add a unique key for each button
-                        >
-                            {index + 1}
-                        </button>
-                    ))}
+                    {(<div>{listChuong && lsQuestion && listChuong.find((valueChuong) => lsQuestion[0].IdChuong === valueChuong.idChuong).thongTinChuong}</div>)}
+                    {
+                        listChuong && lsQuestion && lsQuestion.map((value, index) => (
+                            <>
+                                {index > 0 && lsQuestion[index].IdChuong !== lsQuestion[index - 1].IdChuong ? (
+                                    <div>{listChuong.find((valueChuong) => value.IdChuong === valueChuong.idChuong)?.thongTinChuong}</div>
+                                ) : null}
+                                <button
+                                style={{ width: '60px' }}
+                                className={`btn btn-${lsChoose[index] != -1 ? 'success' : 'secondary'} m-1 text-left`}
+                                onClick={() => selectQuestion(index)} // Use onClick instead of onclick
+                                key={`select_ques_${index}`} // Add a unique key for each button
+                                >
+
+                                {index + 1}
+                                </button>
+                            </>
+                        ))
+                        
+                    }
                 </div>
             </div>
             <div className="container">

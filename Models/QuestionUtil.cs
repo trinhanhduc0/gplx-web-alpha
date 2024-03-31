@@ -8,8 +8,8 @@ namespace DemoGPLX.Models
     public static class QuestionUtil
     {
         private static List<Cau> lsCau = GetAllQuestion();
-        private static List<Hang> lsHang = GetAllHang();
-        private static List<Chuong> lsChuong = GetAllChuong();
+        private static List<Hang> lsHang = null;
+        private static List<Chuong> lsChuong = null;
         private static bool needToReload = true;
         private static DbGplxContext context = GetContext();
         public static void restoreDB()
@@ -23,26 +23,22 @@ namespace DemoGPLX.Models
             cau.IdCau = GetAllQuestion().Count + 1;
             cau.Stt = cau.IdCau;
             cau.HangCaus = new List<HangCau>();
-            cau.Ttcaus = new List<Ttcau>() { new Ttcau() { Diemliet = false, Hinhcauhoi = new byte[0] } };
+            cau.Ttcaus = new List<Ttcau>() { new Ttcau() { IdCau=cau.IdCau, Diemliet = false, Hinhcauhoi = new byte[0] } };
             cau.Dapans = new List<Dapan>();
             return cau;
         }
 
         public static List<Chuong> GetAllChuong()
         {
-            if (needToReload || lsChuong==null)
-            {
-               lsChuong = new DbGplxContext().Chuongs.ToList();
-            }
+            if (lsChuong==null || needToReload) 
+                lsChuong = new DbGplxContext().Chuongs.ToList();
             return lsChuong;
         }
 
         public static List<Hang> GetAllHang()
         {
-            if (needToReload || lsHang == null)
-            {
+            if (lsHang == null || needToReload)
                 lsHang = new DbGplxContext().Hangs.ToList();
-            }
             return lsHang;
         }
 
@@ -216,7 +212,6 @@ namespace DemoGPLX.Models
             catch(Exception ex) { Console.WriteLine(ex.ToString()); }
 
             return lsCauHoi;
-         
         }
 
         static public byte[] GetImageQuestion(int id)

@@ -1,6 +1,6 @@
-import { OnTapLT } from "./components/OnTapLT";
-import { ThiLT } from "./components/ThiLT";
-import { Home } from "./components/Home";
+import { OnTapLT } from "./pages/OnTapLT";
+import { ThiLT } from "./pages/ThiLT";
+import { Home } from "./pages/Home";
 
 const AppRoutes = [
   {

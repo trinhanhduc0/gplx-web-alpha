@@ -13,7 +13,7 @@ export class NavMenu extends Component {
 
         this.state = {
             showModal: false,
-            selectedLicenseType: {},
+            selectedLicenseType: null,
             licenseTypes: [],
         };
     }
@@ -30,6 +30,10 @@ export class NavMenu extends Component {
         const selectedLicenseType = JSON.parse(localStorage.getItem("HANG"));
         if (selectedLicenseType) {
             this.setState({ selectedLicenseType: selectedLicenseType });
+        }
+        else {
+            this.setState({ selectedLicenseType: null });
+
         }
     }
 
@@ -113,8 +117,9 @@ export class NavMenu extends Component {
                                 </div>
                                 {/* Footer */}
                                 <div className="bg-gray-200 rounded-b-lg p-4 flex justify-around">
-                                    <button type="button"  onClick={this.submitForm}><span>OK</span></button>
+                                    <button type="button" className={this.state.selectedLicenseType == null ? "disabled" : ""} onClick={this.submitForm}><span>OK</span></button>
                                 </div>
+
                             </div>
                         </div>
                     </div>

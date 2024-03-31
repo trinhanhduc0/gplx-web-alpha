@@ -30,8 +30,8 @@ namespace DemoGPLX.Controllers
                 return RedirectToAction("ChonHang");
             }
             DataUser user = JsonConvert.DeserializeObject<DataUser>(HttpContext.Request.Cookies["DataUserGPLX"]);
+
             ViewBag.Cookies = user.Id;
-            ViewBag.setTest = false;
             return View();
         }
 
@@ -162,7 +162,12 @@ namespace DemoGPLX.Controllers
         [HttpPost]
         public IActionResult LayDeThiMoi(int id)
         {
-            return Json(QuestionUtil.CreateNewTest(id), opt);
+            var questions = QuestionUtil.CreateNewTest(id);
+
+            var random = new Random();
+            questions = questions.OrderBy(x => random.Next()).ToList();
+
+            return Json(questions, opt);
         }
 
         [HttpPost]

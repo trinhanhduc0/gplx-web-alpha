@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Container } from 'reactstrap';
-import { NavMenu } from './NavMenu';
-import { FooterPage } from './FooterPage';
+import { NavMenu } from '../containers/NavMenu';
+import { FooterPage } from '../containers/FooterPage';
 
 export class Layout extends Component {
   static displayName = Layout.name;

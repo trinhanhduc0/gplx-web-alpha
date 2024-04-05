@@ -2,7 +2,7 @@
 import axios from 'axios';
 import $ from 'jquery';
 import { TbPlayerTrackNextFilled, TbPlayerTrackPrevFilled } from "react-icons/tb";
-
+import { Cursor  } from "../components"
 
 const SwitchComponent = memo(({ handleCheckboxChange, autoSwitchEnabled }) => {
     return (
@@ -54,6 +54,7 @@ export const ThiLT = () => {
     }); // Thời gian còn lại trong bài thi (tính theo giây)
     const [timerActive, setTimerActive] = useState(false); // Trạng thái của đồng hồ đếm ngược
 
+    const [didQues, setDidQues] = useState(0);
     // Hàm bắt đầu đếm ngược
     const startTimer = () => {
         setTimerActive(true);
@@ -209,27 +210,33 @@ export const ThiLT = () => {
 
     useEffect(() => {
         if (endTest == true) {
-                var index = lsQuestion[currentQuestionIndex].Dapans.$values.find(e => e.Dapandung == true).IdDapan - 1;
-                if (lsChoose[currentQuestionIndex] != index) {
-                    $(".choose-val").removeClass("bg-[blue] bg-[red] text-white");
-                    $(".choose-val").eq(index).addClass("bg-[blue] text-white");
-                    if (lsChoose[currentQuestionIndex]!=-1)
-                         $(".choose-val").eq(lsChoose[currentQuestionIndex]).addClass("bg-[red] text-white");
+            var index = lsQuestion[currentQuestionIndex].Dapans.$values.find(e => e.Dapandung == true).IdDapan - 1;
+            if (lsChoose[currentQuestionIndex] != index) {
+                $(".choose-val").removeClass("bg-[blue] bg-[red] text-white");
+                $(".choose-val").eq(index).addClass("bg-[blue] text-white");
+                if (lsChoose[currentQuestionIndex] != -1)
+                    $(".choose-val").eq(lsChoose[currentQuestionIndex]).addClass("bg-[red] text-white");
 
-                }
-                else {
-                    $(".choose-val").removeClass("bg-[blue] bg-[red] text-white");
-                    $(".choose-val").eq(index).addClass("bg-[blue] text-white");
-                }
-            
+            }
+            else {
+                $(".choose-val").removeClass("bg-[blue] bg-[red] text-white");
+                $(".choose-val").eq(index).addClass("bg-[blue] text-white");
+            }
+
         }
         else {
             $(".choose-val").removeClass("bg-[blue] bg-[red] text-white");
-            if (lsChoose[currentQuestionIndex]!= -1)
+            if (lsChoose[currentQuestionIndex] != -1)
                 $(".choose-val").eq(lsChoose[currentQuestionIndex]).addClass("bg-[blue] text-white");
-            
+            var count = 0;
+            lsChoose.map(value => {
+                if (value != -1) {
+                    count++;
+                }
+            });
+            setDidQues(count);
+
         }
-        console.log(lsChoose);
     }, [lsChoose, currentQuestionIndex, endTest]);
 
 
@@ -241,6 +248,8 @@ export const ThiLT = () => {
                 return updatedLsChoose;
             });
 
+        
+       
 
         if (autoSwitchEnabled) {
             setTimeout(() => {
@@ -261,9 +270,9 @@ export const ThiLT = () => {
 
     const showQuestion = (index) => {
         setCurrentQuestionIndex(index);
-
         setQues(lsQuestion[index]);
         updateFontSize();
+
     };
 
     const handleCheckboxChange = () => {
@@ -286,14 +295,14 @@ export const ThiLT = () => {
                 count++;
             }
             else
-            if (lsQuestion[index].Ttcaus.$values[0].Diemliet==true) {
-                if (value + 1 != ind) {
-                    count = -100;
+                if (lsQuestion[index].Ttcaus.$values[0].Diemliet == true) {
+                    if (value + 1 != ind) {
+                        count = -100;
+                    }
+                    else {
+                        count++;
+                    }
                 }
-                else {
-                    count++;
-                }
-            }
         });
         if (count < 0) {
             alert("BẠN ĐÃ THI RỚT");
@@ -302,11 +311,9 @@ export const ThiLT = () => {
             alert("Bạn làm đúng: " + count + " câu");
         }
     };
-
-    console.log("render");
-
     return (
         <>
+
             <div id="questionOverlay" className="overlay hidden">
                 <button className="w-25 flex justify-center items-center" id="closeOverlayBtn" onClick={closeListQuestion}>
                     <img width="64" height="64" src="https://img.icons8.com/nolan/64/exit.png" alt="exit" />
@@ -327,6 +334,7 @@ export const ThiLT = () => {
                                     {index + 1}
                                 </button>
                             ))}
+                            {lsQuestion ? <div>Bạn đã làm được {didQues} / {lsChoose.length}</div>:""}
                         </div>
                         <div className="container mb-4">
                             <SwitchComponent handleCheckboxChange={handleCheckboxChange} autoSwitchEnabled={autoSwitchEnabled} />
@@ -338,7 +346,7 @@ export const ThiLT = () => {
                                 <img className="w-10 h-10" src="https://img.icons8.com/ultraviolet/40/minus.png" alt="minus" />
                             </button>
                         </div>
-    
+
                         <div className="row mt-4">
                             <button
                                 className="btn btn-secondary m-1 flex justify-center"
@@ -351,26 +359,26 @@ export const ThiLT = () => {
                             >
                                 <TbPlayerTrackPrevFilled />
                             </button>
-    
+
                             <button
                                 className="btn btn-secondary m-1 flex justify-center"
                                 id="nextBtn"
                                 onClick={() => {
                                     if (currentQuestionIndex < lsQuestion.length - 1) {
-                                        selectQuestion(currentQuestionIndex+1)
+                                        selectQuestion(currentQuestionIndex + 1)
                                     }
                                 }}
                             >
                                 <TbPlayerTrackNextFilled />
                             </button>
                         </div>
-    
+
                         {!endTest && timerActive && (
                             <div className="row mt-4">
                                 <button className="btn btn-danger" onClick={handleSubmit}>Nộp bài</button>
                             </div>
                         )}
-    
+
                         {timerActive ? (
                             ques ? (
                                 <div className="container mt-4" id="test_content">
@@ -380,7 +388,7 @@ export const ThiLT = () => {
                                             <div className="flex justify-content-center">
                                                 <img
                                                     id={`image${ques.IdCau}`}
-                                                    className="py-4 rounded img-fluid w-md-50 hidden"
+                                                    className="py-4 rounded img-fluid w-md-50"
                                                     src={ques.Ttcaus.$values[0].Hinhcauhoi ? `data:image/jpeg;base64,${ques.Ttcaus.$values[0].Hinhcauhoi}` : ""}
                                                     alt="Hình ảnh câu hỏi"
                                                 />
@@ -414,5 +422,5 @@ export const ThiLT = () => {
                 </div>
             </div>
         </>
-    );    
+    );
 };

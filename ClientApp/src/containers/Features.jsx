@@ -9,7 +9,7 @@ const featuresData = [
   },
   {
     title: '',
-    text: 'Bước 2: CHỌN HẠNG và đọc kĩ hướng dẫn, cấu trúc đề và kéo đến phần “Thi Lý Thuyết ”',
+    text: 'Bước 2: Đọc kĩ hướng dẫn, cấu trúc đề và kéo đến phần “Thi Lý Thuyết ”',
   },
   {
     title: '',
